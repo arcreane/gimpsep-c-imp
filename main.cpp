@@ -1,19 +1,11 @@
 #include <iostream>
 #include <vector>
 
+void help();
 
 int main(int argc, char **argv) {
     if (argc <= 2) {
-        std::cout << "Usage: " << argv[0] << "[options]" << std::endl;
-        std::cout << "Options:" << std::endl;
-        std::cout << "  --dilate-erode <input_path> <output_path>: Perform dilatation and erosion" << std::endl;
-        std::cout << "  --resize <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
-        std::cout << "  --resize <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
-        std::cout << "  --lighten-darken <input_path> <output_path> <factor>: Lighten or darken the image" << std::endl;
-        std::cout << "  --panorama <output_path> [<input_path>]: Create a panorama by stitching images" << std::endl;
-        std::cout << "  --canny <input_path> <output_path> <threshold1> <threshold2> <kernel_size>: ";
-        std::cout << "Perform Canny edge detection" << std::endl;
-
+        help();
         return 1;
     } else {
         std::string option = argv[1];
@@ -61,4 +53,16 @@ int main(int argc, char **argv) {
     }
 
     return 0;
+}
+
+void help() {
+    std::cout << "Usage of GIMPSEP-C-IMP:" << std::endl;
+    std::cout << "Options:" << std::endl;
+    std::cout << "  --dilate-erode <input_path> <output_path>: Perform dilatation and erosion" << std::endl;
+    std::cout << "  --resize <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
+    std::cout << "  --resize <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
+    std::cout << "  --lighten-darken <input_path> <output_path> <factor>: Lighten or darken the image" << std::endl;
+    std::cout << "  --panorama <output_path> [input_paths]: Create a panorama by stitching images" << std::endl;
+    std::cout << "  --canny <input_path> <output_path> <threshold1> <threshold2> <kernel_size>: ";
+    std::cout << "Perform Canny edge detection" << std::endl;
 }
