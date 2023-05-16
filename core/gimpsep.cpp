@@ -5,7 +5,7 @@
 
 typedef std::string String;
 
-cv::Mat Gimpsep::readImage(const String &filename, int flags = cv::IMREAD_GRAYSCALE) {
+cv::Mat Gimpsep::readImage(const String &filename, int flags = cv::IMREAD_COLOR) {
     cv::Mat image = cv::imread(filename, flags);
     if (image.empty()) {
         std::cout << "Error: Failed to open image" << std::endl;
