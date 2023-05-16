@@ -1,7 +1,10 @@
 #include <iostream>
 #include <vector>
 
+#include "core/gimpsep.h"
+
 typedef std::string String;
+
 
 void help();
 
@@ -12,7 +15,12 @@ int main(int argc, char **argv) {
     } else {
         String option = argv[1];
 
-        if (option == "--dilate-erode" && argc == 5) {
+        if (option == "--dilate" && argc == 5) {
+            String inputPath = argv[2];
+            String outputPath = argv[3];
+            int dilationSize = std::stoi(argv[4]);
+            // dilate(inputPath, outputPath, dilationSize);
+        } else if (option == "--erode" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             int erosionSize = std::stoi(argv[4]);
@@ -45,8 +53,8 @@ int main(int argc, char **argv) {
             String outputPath = argv[3];
             double threshold1 = std::stod(argv[4]);
             double threshold2 = std::stod(argv[5]);
-            int kernelSize = std::stoi(argv[6]);
-            // cannyEdgeDetection(inputPath, outputPath, threshold1, threshold2, kernelSize);
+            int apertureSize = std::stoi(argv[6]);
+            Gimpsep::cannyEdgeDetection(inputPath, outputPath, threshold1, threshold2, apertureSize);
         } else {
             std::cout << "Could not find any option accepting the given input parameters!" << std::endl;
             return 1;
@@ -59,11 +67,12 @@ int main(int argc, char **argv) {
 void help() {
     std::cout << "Usage of GIMPSEP-C-IMP:" << std::endl;
     std::cout << "Options:" << std::endl;
-    std::cout << "  --dilate-erode <input_path> <output_path>: Perform dilatation and erosion" << std::endl;
+    std::cout << "  --dilate <input_path> <output_path>: Perform dilatation" << std::endl;
+    std::cout << "  --erode <input_path> <output_path>: Perform erosion" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
     std::cout << "  --lighten-darken <input_path> <output_path> <factor>: Lighten or darken the image" << std::endl;
     std::cout << "  --panorama <output_path> [input_paths]: Create a panorama by stitching images" << std::endl;
-    std::cout << "  --canny <input_path> <output_path> <threshold1> <threshold2> <kernel_size>: ";
+    std::cout << "  --canny <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: ";
     std::cout << "Perform Canny edge detection" << std::endl;
 }
