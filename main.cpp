@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 
+typedef std::string String;
+
 void help();
 
 int main(int argc, char **argv) {
@@ -8,40 +10,39 @@ int main(int argc, char **argv) {
         help();
         return 1;
     } else {
-        std::string option = argv[1];
-        std::cout << argc << std::endl;
+        String option = argv[1];
 
         if (option == "--dilate-erode" && argc == 5) {
-            std::string inputPath = argv[2];
-            std::string outputPath = argv[3];
+            String inputPath = argv[2];
+            String outputPath = argv[3];
             int erosionSize = std::stoi(argv[4]);
-            // dilateErode(inputPath, outputPath, erosionSize);
+            // erode(inputPath, outputPath, erosionSize);
         } else if (option == "--resize" && argc == 6) {
-            std::string inputPath = argv[2];
-            std::string outputPath = argv[3];
+            String inputPath = argv[2];
+            String outputPath = argv[3];
             int width = std::stoi(argv[4]);
             int height = std::stoi(argv[5]);
             // resizeImage(inputPath, outputPath, width, height);
         } else if (option == "--resize" && argc == 5) {
-            std::string inputPath = argv[2];
-            std::string outputPath = argv[3];
+            String inputPath = argv[2];
+            String outputPath = argv[3];
             double factor = std::stod(argv[4]);
             // resizeImage(inputPath, outputPath, factor);
         } else if (option == "--lighten-darken" && argc == 5) {
-            std::string inputPath = argv[2];
-            std::string outputPath = argv[3];
+            String inputPath = argv[2];
+            String outputPath = argv[3];
             double factor = std::stod(argv[4]);
-            // lightenDarken(inputPath, outputPath, value);
-        } else if (option == "--panorama") {
-            std::string outputPath = argv[2];
-            std::vector<std::string> inputPaths;
+            // lightenDarken(inputPath, outputPath, factor);
+        } else if (option == "--stitch") {
+            String outputPath = argv[2];
+            std::vector<String> inputPaths;
             for (int i = 2; i < argc; i++) {
                 inputPaths.emplace_back(argv[i]);
             }
-            // panorama(inputPaths, outputPath);
+            // stitch(inputPaths, outputPath);
         } else if (option == "--canny" && argc == 7) {
-            std::string inputPath = argv[2];
-            std::string outputPath = argv[3];
+            String inputPath = argv[2];
+            String outputPath = argv[3];
             double threshold1 = std::stod(argv[4]);
             double threshold2 = std::stod(argv[5]);
             int kernelSize = std::stoi(argv[6]);
