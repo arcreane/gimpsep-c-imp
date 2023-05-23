@@ -30,24 +30,24 @@ int main(int argc, char **argv) {
             String outputPath = argv[3];
             int width = std::stoi(argv[4]);
             int height = std::stoi(argv[5]);
-            // resizeImage(inputPath, outputPath, width, height);
+            Gimpsep::resizeImage(inputPath, outputPath, width, height);
         } else if (option == "--resize" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             double factor = std::stod(argv[4]);
-            // resizeImage(inputPath, outputPath, factor);
+            Gimpsep::resizeImage(inputPath, outputPath, factor);
         } else if (option == "--lighten-darken" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             double factor = std::stod(argv[4]);
-            // lightenDarken(inputPath, outputPath, factor);
-        } else if (option == "--stitch") {
+            Gimpsep::lightenDarken(inputPath, outputPath, factor);
+        } else if (option == "--panorama") {
             String outputPath = argv[2];
-            std::vector<String> inputPaths;
-            for (int i = 2; i < argc; i++) {
-                inputPaths.emplace_back(argv[i]);
+            std::vector<String> *inputPaths = new std::vector<String>();
+            for (int i = 3; i < argc; i++) {
+                inputPaths->emplace_back(argv[i]);
             }
-            // stitch(inputPaths, outputPath);
+            Gimpsep::stitch(inputPaths, outputPath);
         } else if (option == "--canny" && argc == 7) {
             String inputPath = argv[2];
             String outputPath = argv[3];
