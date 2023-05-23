@@ -26,6 +26,27 @@ void Gimpsep::cannyEdgeDetection(String &inputPath, String &outputPath, double t
     std::cout << "Canny edge detection completed!" << std::endl;
 }
 
+void Gimpsep::dilate(String &inputPath, String &outputPath, int size) {
+    cv::Mat image = Gimpsep::readImage(inputPath);
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
+                                                cv::Size(2 * size + 1, 2 * size + 1),
+                                                cv::Point(size, size));
+    cv::dilate(inputPath, outputPath, element);
+    cv::imwrite(outputPath);
+    std::cout << "Dilate operation completed!" << std::endl;
+}
+
+
+void Gimpsep::erode(String &inputPath, String &outputPath, int size) {
+    cv::Mat image = Gimpsep::readImage(inputPath);
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS,
+                                                cv::Size(2 * size + 1, 2 * size + 1),
+                                                cv::Point(size, size));
+    cv::dilate(inputPath, outputPath, element);
+    cv::imwrite(outputPath);
+    std::cout << "Erode operation completed!" << std::endl;
+}
+
 void Gimpsep::resizeImage(String& inputPath, String& outputPath, int width, int height)
 {
     cv::Mat image = Gimpsep::readImage(inputPath);
