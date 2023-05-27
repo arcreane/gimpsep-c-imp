@@ -5,10 +5,10 @@
 A project to develop a small GIMP-like image editor at ISEP summer semester 2023.
 
 ### Group members:
+#### Witchaya Apichonkit,
 #### Jakub Biegas,
 #### Nizar Bikti, 
-#### Rahul Sharma,
-#### Witchaya Apichonkit.
+#### Rahul Sharma.
 
 
 ### Work subdivision (first sprint):
