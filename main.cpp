@@ -19,12 +19,12 @@ int main(int argc, char **argv) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             int dilationSize = std::stoi(argv[4]);
-            // dilate(inputPath, outputPath, dilationSize);
+            Gimpsep::dilate(inputPath, outputPath, dilationSize);
         } else if (option == "--erode" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             int erosionSize = std::stoi(argv[4]);
-            // erode(inputPath, outputPath, erosionSize);
+            Gimpsep::erode(inputPath, outputPath, erosionSize);
         } else if (option == "--resize" && argc == 6) {
             String inputPath = argv[2];
             String outputPath = argv[3];
@@ -67,8 +67,8 @@ int main(int argc, char **argv) {
 void help() {
     std::cout << "Usage of GIMPSEP-C-IMP:" << std::endl;
     std::cout << "Options:" << std::endl;
-    std::cout << "  --dilate <input_path> <output_path>: Perform dilatation" << std::endl;
-    std::cout << "  --erode <input_path> <output_path>: Perform erosion" << std::endl;
+    std::cout << "  --dilate <input_path> <output_path> <dilate_size>: Perform dilatation" << std::endl;
+    std::cout << "  --erode <input_path> <output_path> <dilate_size>: Perform erosion" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
     std::cout << "  --lighten-darken <input_path> <output_path> <factor>: Lighten or darken the image" << std::endl;
