@@ -14,7 +14,6 @@ cv::Mat Gimpsep::readImage(const String &filename, int flags = cv::IMREAD_COLOR)
     return image;
 }
 
-
 void Gimpsep::cannyEdgeDetection(String &inputPath, String &outputPath, double threshold1, double threshold2,
                                  int apertureSize) {
     cv::Mat image = Gimpsep::readImage(inputPath);
@@ -117,4 +116,38 @@ void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath)
     cv::imwrite(outputPath, pano);
 
     std::cout << "Panorama created!" << std::endl;
+}
+
+void Gimpsep::lightenDarkenVideo(String &inputPath, String &outputPath, double factor)
+{
+    cv::VideoCapture cap(inputPath);
+
+    if(!cap.isOpened())
+    {
+        std::cout << "Error: Failed to open video" << std::endl;
+        return;
+    }
+
+    cv::VideoWriter video(outputPath,
+                        cap.get(cv::CAP_PROP_FOURCC),
+                        cap.get(cv::CAP_PROP_FPS),
+                        cv::Size(cap.get(cv::CAP_PROP_FRAME_WIDTH),cap.get(cv::CAP_PROP_FRAME_HEIGHT)),
+                        true);
+
+    while(true)
+    {
+        cv::Mat frame;
+        cap >> frame;
+        if(frame.empty())
+            break;
+
+        cv::Mat brightness;
+
+        frame.convertTo(brightness, -1, 1, factor);
+        video.write(brightness);
+    }
+    
+    cap.release();
+    video.release();
+    std::cout << "Brightness adjustment completed!" << std::endl;
 }

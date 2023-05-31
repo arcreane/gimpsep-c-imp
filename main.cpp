@@ -41,6 +41,11 @@ int main(int argc, char **argv) {
             String outputPath = argv[3];
             double factor = std::stod(argv[4]);
             Gimpsep::lightenDarken(inputPath, outputPath, factor);
+        } else if (option == "--lighten-darken" && argc == 6 && String(argv[2]) == "--video") {
+            String inputPath = argv[3];
+            String outputPath = argv[4];
+            double factor = std::stod(argv[5]);
+            Gimpsep::lightenDarkenVideo(inputPath, outputPath, factor);
         } else if (option == "--panorama") {
             String outputPath = argv[2];
             std::vector<String> *inputPaths = new std::vector<String>();
@@ -71,7 +76,7 @@ void help() {
     std::cout << "  --erode <input_path> <output_path> <dilate_size>: Perform erosion" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
-    std::cout << "  --lighten-darken <input_path> <output_path> <factor>: Lighten or darken the image" << std::endl;
+    std::cout << "  --lighten-darken [--video] <input_path> <output_path> <factor>: Lighten or darken the image/video" << std::endl;
     std::cout << "  --panorama <output_path> [input_paths]: Create a panorama by stitching images" << std::endl;
     std::cout << "  --canny <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: ";
     std::cout << "Perform Canny edge detection" << std::endl;
