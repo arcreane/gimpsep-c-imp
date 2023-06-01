@@ -20,11 +20,21 @@ int main(int argc, char **argv) {
             String outputPath = argv[3];
             int dilationSize = std::stoi(argv[4]);
             Gimpsep::dilate(inputPath, outputPath, dilationSize);
+        } else if (option == "--dilate" && argc == 6 && String(argv[2]) == "--video") {
+            String inputPath = argv[3];
+            String outputPath = argv[4];
+            int dilationSize = std::stoi(argv[5]);
+            Gimpsep::dilateVideo(inputPath, outputPath, dilationSize);
         } else if (option == "--erode" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             int erosionSize = std::stoi(argv[4]);
             Gimpsep::erode(inputPath, outputPath, erosionSize);
+        } else if (option == "--erode" && argc == 6 && String(argv[2]) == "--video") {
+            String inputPath = argv[3];
+            String outputPath = argv[4];
+            int erosionSize = std::stoi(argv[5]);
+            Gimpsep::erodeVideo(inputPath, outputPath, erosionSize);
         } else if (option == "--resize" && argc == 6) {
             String inputPath = argv[2];
             String outputPath = argv[3];
@@ -60,6 +70,13 @@ int main(int argc, char **argv) {
             double threshold2 = std::stod(argv[5]);
             int apertureSize = std::stoi(argv[6]);
             Gimpsep::cannyEdgeDetection(inputPath, outputPath, threshold1, threshold2, apertureSize);
+        } else if (option == "--canny" && argc == 8 && String(argv[2]) == "--video") {
+            String inputPath = argv[3];
+            String outputPath = argv[4];
+            double threshold1 = std::stod(argv[5]);
+            double threshold2 = std::stod(argv[6]);
+            int apertureSize = std::stoi(argv[7]);
+            Gimpsep::cannyEdgeDetectionVideo(inputPath, outputPath, threshold1, threshold2, apertureSize);
         } else {
             std::cout << "Could not find any option accepting the given input parameters!" << std::endl;
             return 1;
@@ -72,12 +89,12 @@ int main(int argc, char **argv) {
 void help() {
     std::cout << "Usage of GIMPSEP-C-IMP:" << std::endl;
     std::cout << "Options:" << std::endl;
-    std::cout << "  --dilate <input_path> <output_path> <dilate_size>: Perform dilatation" << std::endl;
-    std::cout << "  --erode <input_path> <output_path> <dilate_size>: Perform erosion" << std::endl;
+    std::cout << "  --dilate [--video] <input_path> <output_path> <dilate_size>: Perform dilatation" << std::endl;
+    std::cout << "  --erode [--video] <input_path> <output_path> <dilate_size>: Perform erosion" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
     std::cout << "  --resize <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
     std::cout << "  --lighten-darken [--video] <input_path> <output_path> <factor>: Lighten or darken the image/video" << std::endl;
     std::cout << "  --panorama <output_path> [input_paths]: Create a panorama by stitching images" << std::endl;
-    std::cout << "  --canny <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: ";
+    std::cout << "  --canny [--video] <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: ";
     std::cout << "Perform Canny edge detection" << std::endl;
 }

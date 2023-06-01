@@ -10,6 +10,7 @@ typedef std::string String;
 class Gimpsep {
 private:
     static cv::Mat readImage(const String &filename, int flags);
+    static std::pair<cv::VideoCapture, cv::VideoWriter> readVideo(const String &filename, const String &outputPath, bool isColor);
 
 public:
     static void dilate(String &inputPath, String &outputPath, int erosionSize);
@@ -27,7 +28,18 @@ public:
     static void
     cannyEdgeDetection(String &inputPath, String &outputPath, double threshold1, double threshold2, int apertureSize);
 
+    static void dilateVideo(String &inputPath, String &outputPath, int erosionSize);
+
+    static void erodeVideo(String &inputPath, String &outputPath, int erosionSize);
+
+    static void resizeVideo(String &inputPath, String &outputPath, int width, int height);
+
+    static void resizeVideo(String &inputPath, String &outputPath, double factor);
+
     static void lightenDarkenVideo(String &inputPath, String &outputPath, double factor);
+
+    static void
+    cannyEdgeDetectionVideo(String &inputPath, String &outputPath, double threshold1, double threshold2, int apertureSize);
 
 };
 
