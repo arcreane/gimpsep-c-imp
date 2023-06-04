@@ -35,17 +35,28 @@ int main(int argc, char **argv) {
             String outputPath = argv[4];
             int erosionSize = std::stoi(argv[5]);
             Gimpsep::erodeVideo(inputPath, outputPath, erosionSize);
-        } else if (option == "--resize" && argc == 6) {
+        } else if (option == "--resize" && argc == 6 && String(argv[2]) != "--video") {
             String inputPath = argv[2];
             String outputPath = argv[3];
             int width = std::stoi(argv[4]);
             int height = std::stoi(argv[5]);
             Gimpsep::resizeImage(inputPath, outputPath, width, height);
+        } else if (option == "--resize" && argc == 7 && String(argv[2]) == "--video") {
+            String inputPath = argv[3];
+            String outputPath = argv[4];
+            int width = std::stoi(argv[5]);
+            int height = std::stoi(argv[6]);
+            Gimpsep::resizeVideo(inputPath, outputPath, width, height);
         } else if (option == "--resize" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             double factor = std::stod(argv[4]);
             Gimpsep::resizeImage(inputPath, outputPath, factor);
+        } else if (option == "--resize" && argc == 6 && String(argv[2]) == "--video") {
+            String inputPath = argv[3];
+            String outputPath = argv[4];
+            double factor = std::stod(argv[5]);
+            Gimpsep::resizeVideo(inputPath, outputPath, factor);
         } else if (option == "--lighten-darken" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
@@ -91,8 +102,8 @@ void help() {
     std::cout << "Options:" << std::endl;
     std::cout << "  --dilate [--video] <input_path> <output_path> <dilate_size>: Perform dilatation" << std::endl;
     std::cout << "  --erode [--video] <input_path> <output_path> <dilate_size>: Perform erosion" << std::endl;
-    std::cout << "  --resize <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
-    std::cout << "  --resize <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
+    std::cout << "  --resize [--video] <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
+    std::cout << "  --resize [--video] <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
     std::cout << "  --lighten-darken [--video] <input_path> <output_path> <factor>: Lighten or darken the image/video" << std::endl;
     std::cout << "  --panorama <output_path> [input_paths]: Create a panorama by stitching images" << std::endl;
     std::cout << "  --canny [--video] <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: ";
