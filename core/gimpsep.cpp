@@ -255,3 +255,71 @@ void Gimpsep::cannyEdgeDetectionVideo(String &inputPath, String &outputPath, dou
 
     std::cout << "Canny edge detection completed!" << std::endl;
 }   
+
+void Gimpsep::resizeVideo(String &inputPath, String &outputPath, int width, int height)
+{
+    cv::VideoCapture cap(inputPath);
+
+    if(!cap.isOpened())
+    {
+        std::cout << "Error: Failed to open video" << std::endl;
+    }
+
+    cv::VideoWriter video(outputPath,
+                        cap.get(cv::CAP_PROP_FOURCC),
+                        cap.get(cv::CAP_PROP_FPS),
+                        cv::Size(width, height));
+
+    while(true)
+    {
+        cv::Mat frame;
+        cap >> frame;
+        if(frame.empty())
+            break;
+
+        cv::Mat resizedImage;
+
+        cv::resize(frame, resizedImage, cv::Size(width, height));
+        video.write(resizedImage);
+    }
+
+    cap.release();
+    video.release();
+
+    std::cout << "Resizing completed!" << std::endl;
+}
+
+void Gimpsep::resizeVideo(String &inputPath, String &outputPath, double factor)
+{
+    cv::VideoCapture cap(inputPath);
+
+    if(!cap.isOpened())
+    {
+        std::cout << "Error: Failed to open video" << std::endl;
+    }
+
+    int width = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH) * factor);
+    int height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT) * factor);
+
+    cv::VideoWriter video(outputPath,
+                        cap.get(cv::CAP_PROP_FOURCC),
+                        cap.get(cv::CAP_PROP_FPS),
+                        cv::Size(width, height));
+
+    while(true)
+    {
+        cv::Mat frame;
+        cap >> frame;
+        if(frame.empty())
+            break;
+
+        cv::Mat resizedImage;
+
+        cv::resize(frame, resizedImage, cv::Size(width, height));
+        video.write(resizedImage);
+    }
+    cap.release();
+    video.release();
+
+    std::cout << "Resizing completed!" << std::endl;
+}
