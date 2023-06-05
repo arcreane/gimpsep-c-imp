@@ -9,13 +9,15 @@ typedef std::string String;
 void help();
 
 int main(int argc, char **argv) {
-    if (argc <= 2) {
+    if (argc < 2) {
         help();
         return 1;
     } else {
         String option = argv[1];
 
-        if (option == "--dilate" && argc == 5) {
+        if (option == "--help" && argc == 2) {
+            help();
+        } else if (option == "--dilate" && argc == 5) {
             String inputPath = argv[2];
             String outputPath = argv[3];
             int dilationSize = std::stoi(argv[4]);
@@ -104,8 +106,9 @@ void help() {
     std::cout << "  --erode [--video] <input_path> <output_path> <dilate_size>: Perform erosion" << std::endl;
     std::cout << "  --resize [--video] <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
     std::cout << "  --resize [--video] <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
-    std::cout << "  --lighten-darken [--video] <input_path> <output_path> <factor>: Lighten or darken the image/video" << std::endl;
+    std::cout << "  --lighten-darken [--video] <input_path> <output_path> <factor>: Lighten or darken the image/video"
+              << std::endl;
     std::cout << "  --panorama <output_path> [input_paths]: Create a panorama by stitching images" << std::endl;
-    std::cout << "  --canny [--video] <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: ";
-    std::cout << "Perform Canny edge detection" << std::endl;
+    std::cout << "  --canny [--video] <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: "
+              << "Perform Canny edge detection" << std::endl;
 }
