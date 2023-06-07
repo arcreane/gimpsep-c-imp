@@ -21,3 +21,4 @@ A project to develop a small GIMP-like image editor at ISEP summer semester 2023
 https://docs.google.com/document/d/1CEteoz5gt4LxcMQ1FyCYHuzGSGbX1B-5-p4Nbt-AwiA/edit
 Overleaf: https://www.overleaf.com/5793549142wjwkqcwhykkc
 ### Presentation: https://iseparis-my.sharepoint.com/:p:/g/personal/rash62841_eleve_isep_fr/Eeejhi4iSNhFm1CEaQauDAMBXGRqWkopcSZeUrOu6indKQ
+Note: The presentation file can only be accessed by an isep mail account.
