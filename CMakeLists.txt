@@ -13,6 +13,6 @@ message(STATUS "    version: ${OpenCV_VERSION}")
 message(STATUS "    libraries: ${OpenCV_LIBS}")
 message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 
-add_executable(gimpsep-c-imp main.cpp core/gimpsep.cpp)
+add_executable(gimpsep-c-imp main.cpp core/Gimpsep.cpp utils/FileReader.h utils/FileReader.cpp core/GimpsepVideo.cpp)
 
 target_link_libraries(gimpsep-c-imp PRIVATE ${OpenCV_LIBS})
