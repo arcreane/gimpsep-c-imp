@@ -1,114 +1,183 @@
+#include "core/Gimpsep.h"
+#include "core/GimpsepVideo.h"
+#include "utils/FileReader.h"
+
 #include <iostream>
 #include <vector>
 
-#include "core/gimpsep.h"
 
 typedef std::string String;
 
+const String WELCOME_TEXT_FILE_PATH = "../assets/welcome.txt";
+
+void displayLogo();
 
 void help();
 
-int main(int argc, char **argv) {
-    if (argc < 2) {
-        help();
-        return 1;
-    } else {
-        String option = argv[1];
+int main() {
+    displayLogo();
 
-        if (option == "--help" && argc == 2) {
+    while (true) {
+        std::cout << "Enter an option or 'q' to quit: ";
+
+        String option;
+        std::getline(std::cin, option);
+
+        if (option == "q") {
+            break;
+        }
+
+        if (option == "--help") {
             help();
-        } else if (option == "--dilate" && argc == 5) {
-            String inputPath = argv[2];
-            String outputPath = argv[3];
-            int dilationSize = std::stoi(argv[4]);
-            Gimpsep::dilate(inputPath, outputPath, dilationSize);
-        } else if (option == "--dilate" && argc == 6 && String(argv[2]) == "--video") {
-            String inputPath = argv[3];
-            String outputPath = argv[4];
-            int dilationSize = std::stoi(argv[5]);
-            Gimpsep::dilateVideo(inputPath, outputPath, dilationSize);
-        } else if (option == "--erode" && argc == 5) {
-            String inputPath = argv[2];
-            String outputPath = argv[3];
-            int erosionSize = std::stoi(argv[4]);
-            Gimpsep::erode(inputPath, outputPath, erosionSize);
-        } else if (option == "--erode" && argc == 6 && String(argv[2]) == "--video") {
-            String inputPath = argv[3];
-            String outputPath = argv[4];
-            int erosionSize = std::stoi(argv[5]);
-            Gimpsep::erodeVideo(inputPath, outputPath, erosionSize);
-        } else if (option == "--resize" && argc == 6 && String(argv[2]) != "--video") {
-            String inputPath = argv[2];
-            String outputPath = argv[3];
-            int width = std::stoi(argv[4]);
-            int height = std::stoi(argv[5]);
-            Gimpsep::resizeImage(inputPath, outputPath, width, height);
-        } else if (option == "--resize" && argc == 7 && String(argv[2]) == "--video") {
-            String inputPath = argv[3];
-            String outputPath = argv[4];
-            int width = std::stoi(argv[5]);
-            int height = std::stoi(argv[6]);
-            Gimpsep::resizeVideo(inputPath, outputPath, width, height);
-        } else if (option == "--resize" && argc == 5) {
-            String inputPath = argv[2];
-            String outputPath = argv[3];
-            double factor = std::stod(argv[4]);
-            Gimpsep::resizeImage(inputPath, outputPath, factor);
-        } else if (option == "--resize" && argc == 6 && String(argv[2]) == "--video") {
-            String inputPath = argv[3];
-            String outputPath = argv[4];
-            double factor = std::stod(argv[5]);
-            Gimpsep::resizeVideo(inputPath, outputPath, factor);
-        } else if (option == "--lighten-darken" && argc == 5) {
-            String inputPath = argv[2];
-            String outputPath = argv[3];
-            double factor = std::stod(argv[4]);
-            Gimpsep::lightenDarken(inputPath, outputPath, factor);
-        } else if (option == "--lighten-darken" && argc == 6 && String(argv[2]) == "--video") {
-            String inputPath = argv[3];
-            String outputPath = argv[4];
-            double factor = std::stod(argv[5]);
-            Gimpsep::lightenDarkenVideo(inputPath, outputPath, factor);
-        } else if (option == "--panorama") {
-            String outputPath = argv[2];
-            std::vector<String> *inputPaths = new std::vector<String>();
-            for (int i = 3; i < argc; i++) {
-                inputPaths->emplace_back(argv[i]);
+        } else if (option == "--dilate" || option == "--dilate --video") {
+            String inputPath, outputPath;
+            int dilationSize;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::cout << "Enter dilation size: ";
+            std::cin >> dilationSize;
+            std::cin.ignore(); // Ignore remaining newline character
+
+            if (option == "--dilate") {
+                Gimpsep::dilate(inputPath, outputPath, dilationSize);
+            } else {
+                GimpsepVideo::dilate(inputPath, outputPath, dilationSize);
             }
-            Gimpsep::stitch(inputPaths, outputPath);
-        } else if (option == "--canny" && argc == 7) {
-            String inputPath = argv[2];
-            String outputPath = argv[3];
-            double threshold1 = std::stod(argv[4]);
-            double threshold2 = std::stod(argv[5]);
-            int apertureSize = std::stoi(argv[6]);
-            Gimpsep::cannyEdgeDetection(inputPath, outputPath, threshold1, threshold2, apertureSize);
-        } else if (option == "--canny" && argc == 8 && String(argv[2]) == "--video") {
-            String inputPath = argv[3];
-            String outputPath = argv[4];
-            double threshold1 = std::stod(argv[5]);
-            double threshold2 = std::stod(argv[6]);
-            int apertureSize = std::stoi(argv[7]);
-            Gimpsep::cannyEdgeDetectionVideo(inputPath, outputPath, threshold1, threshold2, apertureSize);
+        } else if (option == "--erode" || option == "--erode --video") {
+            String inputPath, outputPath;
+            int erosionSize;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::cout << "Enter erosion size: ";
+            std::cin >> erosionSize;
+            std::cin.ignore(); // Ignore remaining newline character
+
+            if (option == "--erode") {
+                Gimpsep::erode(inputPath, outputPath, erosionSize);
+            } else {
+                GimpsepVideo::erode(inputPath, outputPath, erosionSize);
+            }
+        } else if (option == "--resize" || option == "--resize --video") {
+            String inputPath, outputPath;
+            int width, height;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::cout << "Enter width: ";
+            std::cin >> width;
+            std::cout << "Enter height: ";
+            std::cin >> height;
+            std::cin.ignore(); // Ignore remaining newline character
+
+            if (option == "--resize") {
+                Gimpsep::resizeImage(inputPath, outputPath, width, height);
+            } else {
+                GimpsepVideo::resize(inputPath, outputPath, width, height);
+            }
+        } else if (option == "--resize-by-factor" || option == "--resize-by-factor --video") {
+            String inputPath, outputPath;
+            double factor;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::cout << "Enter factor: ";
+            std::cin >> factor;
+            std::cin.ignore(); // Ignore remaining newline character
+
+            if (option == "--resize") {
+                Gimpsep::resizeImage(inputPath, outputPath, factor);
+            } else {
+                GimpsepVideo::resize(inputPath, outputPath, factor);
+            }
+        } else if (option == "--lighten-darken" || option == "--lighten-darken --video") {
+            String inputPath, outputPath;
+            double factor;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::cout << "Enter factor: ";
+            std::cin >> factor;
+            std::cin.ignore(); // Ignore remaining newline character
+
+            if (option == "--lighten-darken") {
+                Gimpsep::lightenDarken(inputPath, outputPath, factor);
+            } else {
+                GimpsepVideo::lightenDarken(inputPath, outputPath, factor);
+            }
+        } else if (option == "--canny" || option == "--canny --video") {
+            String inputPath, outputPath;
+            double threshold1, threshold2;
+            int apertureSize;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::cout << "Enter threshold 1: ";
+            std::cin >> threshold1;
+            std::cout << "Enter threshold 2: ";
+            std::cin >> threshold2;
+            std::cout << "Enter aperture size: ";
+            std::cin >> apertureSize;
+            std::cin.ignore(); // Ignore remaining newline character
+
+            if (option == "--canny") {
+                Gimpsep::cannyEdgeDetection(inputPath, outputPath, threshold1, threshold2, apertureSize);
+            } else {
+                GimpsepVideo::cannyEdgeDetection(inputPath, outputPath, threshold1, threshold2, apertureSize);
+            }
+        } else if (option == "--panorama") {
+            String outputPath;
+
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::vector<String> inputPaths;
+            std::cout << "Enter input paths (separated by spaces): ";
+            String input;
+            std::getline(std::cin, input);
+
+            // Split the input string into individual paths
+            std::istringstream iss(input);
+            std::string path;
+            while (iss >> path) {
+                inputPaths.push_back(path);
+            }
+
+            Gimpsep::stitch(&inputPaths, outputPath);
         } else {
-            std::cout << "Could not find any option accepting the given input parameters!" << std::endl;
-            return 1;
+            std::cout << "Invalid option! Enter '--help' to see the available options." << std::endl;
         }
     }
 
     return 0;
 }
 
+void displayLogo() {
+    std::string asciiArt = FileReader::readTextFile(WELCOME_TEXT_FILE_PATH);
+    std::cout << asciiArt << std::endl;
+}
+
 void help() {
     std::cout << "Usage of GIMPSEP-C-IMP:" << std::endl;
     std::cout << "Options:" << std::endl;
-    std::cout << "  --dilate [--video] <input_path> <output_path> <dilate_size>: Perform dilatation" << std::endl;
-    std::cout << "  --erode [--video] <input_path> <output_path> <dilate_size>: Perform erosion" << std::endl;
-    std::cout << "  --resize [--video] <input_path> <output_path> <width> <height>: Resize the image" << std::endl;
-    std::cout << "  --resize [--video] <input_path> <output_path> <factor>: Resize the image by factor" << std::endl;
-    std::cout << "  --lighten-darken [--video] <input_path> <output_path> <factor>: Lighten or darken the image/video"
-              << std::endl;
-    std::cout << "  --panorama <output_path> [input_paths]: Create a panorama by stitching images" << std::endl;
-    std::cout << "  --canny [--video] <input_path> <output_path> <threshold1> <threshold2> <aperture_size>: "
-              << "Perform Canny edge detection" << std::endl;
+    std::cout << "  --dilate [--video]: Perform dilatation" << std::endl;
+    std::cout << "  --erode [--video]: Perform erosion" << std::endl;
+    std::cout << "  --resize [--video]: Resize image/video" << std::endl;
+    std::cout << "  --resize-by-factor [--video]: Resize image/video by factor" << std::endl;
+    std::cout << "  --lighten-darken [--video]: Lighten or darken the image/video" << std::endl;
+    std::cout << "  --canny [--video]: Perform Canny edge detection" << std::endl;
+    std::cout << "  --panorama: Create a panorama by stitching images" << std::endl;
+    std::cout << "  --help: Show help information" << std::endl;
 }
