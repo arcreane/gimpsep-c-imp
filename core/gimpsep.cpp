@@ -14,28 +14,27 @@ cv::Mat Gimpsep::readImage(const String &filename, int flags = cv::IMREAD_COLOR)
     return image;
 }
 
-std::pair<cv::VideoCapture, cv::VideoWriter> Gimpsep::readVideo(const String &filename, const String &outputPath, bool isColor = true)
-{
+std::pair<cv::VideoCapture, cv::VideoWriter>
+Gimpsep::readVideo(const String &filename, const String &outputPath, bool isColor = true) {
     cv::VideoCapture cap(filename);
 
-    if(!cap.isOpened())
-    {
+    if (!cap.isOpened()) {
         std::cout << "Error: Failed to open video" << std::endl;
     }
 
     cv::VideoWriter video(outputPath,
-                        cap.get(cv::CAP_PROP_FOURCC),
-                        cap.get(cv::CAP_PROP_FPS),
-                        cv::Size(cap.get(cv::CAP_PROP_FRAME_WIDTH),cap.get(cv::CAP_PROP_FRAME_HEIGHT)),
-                        isColor);
-    
+                          cap.get(cv::CAP_PROP_FOURCC),
+                          cap.get(cv::CAP_PROP_FPS),
+                          cv::Size(cap.get(cv::CAP_PROP_FRAME_WIDTH), cap.get(cv::CAP_PROP_FRAME_HEIGHT)),
+                          isColor);
+
     //return VideoCapture and VideoWriter objects in a pair
     //to access each element of a pair uses the following syntax
     //std::pair <cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath);
     //cv::VideoCapture cap = videoCW.first;
     //cv::VideoWriter video = videoCW.second;
 
-    return std::make_pair(cap, video);  
+    return std::make_pair(cap, video);
 }
 
 void Gimpsep::cannyEdgeDetection(String &inputPath, String &outputPath, double threshold1, double threshold2,
@@ -70,11 +69,10 @@ void Gimpsep::erode(String &inputPath, String &outputPath, int size) {
                                                 cv::Point(size, size));
     cv::erode(image, erodedImage, element);
     cv::imwrite(outputPath, erodedImage);
-    std::cout<< "Erode image saved as" << outputPath << std::endl;
+    std::cout << "Erode image saved as" << outputPath << std::endl;
 }
 
-void Gimpsep::resizeImage(String& inputPath, String& outputPath, int width, int height)
-{
+void Gimpsep::resizeImage(String &inputPath, String &outputPath, int width, int height) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat resizedImage;
 
@@ -84,8 +82,7 @@ void Gimpsep::resizeImage(String& inputPath, String& outputPath, int width, int 
     std::cout << "Resized image saved as" << outputPath << std::endl;
 }
 
-void Gimpsep::resizeImage(String& inputPath, String& outputPath, double factor)
-{
+void Gimpsep::resizeImage(String &inputPath, String &outputPath, double factor) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat resizedImage;
 
@@ -95,8 +92,7 @@ void Gimpsep::resizeImage(String& inputPath, String& outputPath, double factor)
     std::cout << "Resized image saved as" << outputPath << std::endl;
 }
 
-void Gimpsep::lightenDarken(String &inputPath, String &outputPath, double factor)
-{
+void Gimpsep::lightenDarken(String &inputPath, String &outputPath, double factor) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat brightness;
 
@@ -106,11 +102,9 @@ void Gimpsep::lightenDarken(String &inputPath, String &outputPath, double factor
     std::cout << "Brightness adjustment completed!" << std::endl;
 }
 
-void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath)
-{
+void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath) {
     std::vector<cv::Mat> image_array;
-    for(int i = 0; i < inputPaths->size(); i++)
-    {
+    for (int i = 0; i < inputPaths->size(); i++) {
         image_array.emplace_back(Gimpsep::readImage((*inputPaths)[i]));
     }
 
@@ -121,18 +115,13 @@ void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath)
 
     cv::Stitcher::Status status = stitcher->stitch(image_array, pano);
 
-    if(status == cv::Stitcher::ERR_NEED_MORE_IMGS)
-    {
+    if (status == cv::Stitcher::ERR_NEED_MORE_IMGS) {
         std::cout << "Need more images." << std::endl;
         return;
-    }
-    else if(status == cv::Stitcher::ERR_CAMERA_PARAMS_ADJUST_FAIL)
-    {
+    } else if (status == cv::Stitcher::ERR_CAMERA_PARAMS_ADJUST_FAIL) {
         std::cout << "Camera parameter adjustment failed." << std::endl;
         return;
-    }
-    else if(status == cv::Stitcher::ERR_HOMOGRAPHY_EST_FAIL)
-    {
+    } else if (status == cv::Stitcher::ERR_HOMOGRAPHY_EST_FAIL) {
         std::cout << "Homography estimation failed." << std::endl;
         return;
     }
@@ -142,9 +131,8 @@ void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath)
     std::cout << "Panorama created!" << std::endl;
 }
 
-void Gimpsep::dilateVideo(String &inputPath, String &outputPath, int size)
-{
-    std::pair <cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath);
+void Gimpsep::dilateVideo(String &inputPath, String &outputPath, int size) {
+    std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
 
@@ -153,17 +141,16 @@ void Gimpsep::dilateVideo(String &inputPath, String &outputPath, int size)
                                                 cv::Size(2 * size + 1, 2 * size + 1),
                                                 cv::Point(size, size));
 
-    while(true)
-    {
+    while (true) {
         cv::Mat frame;
         cap >> frame;
-        if(frame.empty())
+        if (frame.empty())
             break;
 
         cv::dilate(frame, dilatedImage, element);
         video.write(dilatedImage);
     }
-    
+
     cap.release();
     video.release();
     videoCW.first.release();
@@ -172,9 +159,8 @@ void Gimpsep::dilateVideo(String &inputPath, String &outputPath, int size)
     std::cout << "Dilated image saved as" << outputPath << std::endl;
 }
 
-void Gimpsep::erodeVideo(String &inputPath, String &outputPath, int size)
-{
-    std::pair <cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath);
+void Gimpsep::erodeVideo(String &inputPath, String &outputPath, int size) {
+    std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
 
@@ -183,36 +169,33 @@ void Gimpsep::erodeVideo(String &inputPath, String &outputPath, int size)
                                                 cv::Size(2 * size + 1, 2 * size + 1),
                                                 cv::Point(size, size));
 
-    while(true)
-    {
+    while (true) {
         cv::Mat frame;
         cap >> frame;
-        if(frame.empty())
+        if (frame.empty())
             break;
 
         cv::erode(frame, erodedImage, element);
         video.write(erodedImage);
     }
-    
+
     cap.release();
     video.release();
     videoCW.first.release();
     videoCW.second.release();
-    
-    std::cout<< "Erode image saved as" << outputPath << std::endl;
+
+    std::cout << "Erode image saved as" << outputPath << std::endl;
 }
 
-void Gimpsep::lightenDarkenVideo(String &inputPath, String &outputPath, double factor)
-{
-    std::pair <cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath);
+void Gimpsep::lightenDarkenVideo(String &inputPath, String &outputPath, double factor) {
+    std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
 
-    while(true)
-    {
+    while (true) {
         cv::Mat frame;
         cap >> frame;
-        if(frame.empty())
+        if (frame.empty())
             break;
 
         cv::Mat brightness;
@@ -220,7 +203,7 @@ void Gimpsep::lightenDarkenVideo(String &inputPath, String &outputPath, double f
         frame.convertTo(brightness, -1, 1, factor);
         video.write(brightness);
     }
-    
+
     cap.release();
     video.release();
     videoCW.first.release();
@@ -229,21 +212,20 @@ void Gimpsep::lightenDarkenVideo(String &inputPath, String &outputPath, double f
     std::cout << "Brightness adjustment completed!" << std::endl;
 }
 
-void Gimpsep::cannyEdgeDetectionVideo(String &inputPath, String &outputPath, double threshold1, double threshold2, int apertureSize)
-{
-    std::pair <cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath, false);
+void Gimpsep::cannyEdgeDetectionVideo(String &inputPath, String &outputPath, double threshold1, double threshold2,
+                                      int apertureSize) {
+    std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = Gimpsep::readVideo(inputPath, outputPath, false);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
 
-    while(true)
-    {
+    while (true) {
         cv::Mat frame;
         cap >> frame;
-        if(frame.empty())
+        if (frame.empty())
             break;
 
         cv::Mat edges;
-        
+
         cv::Canny(frame, edges, threshold1, threshold2, apertureSize);
         video.write(edges);
     }
@@ -254,27 +236,24 @@ void Gimpsep::cannyEdgeDetectionVideo(String &inputPath, String &outputPath, dou
     videoCW.second.release();
 
     std::cout << "Canny edge detection completed!" << std::endl;
-}   
+}
 
-void Gimpsep::resizeVideo(String &inputPath, String &outputPath, int width, int height)
-{
+void Gimpsep::resizeVideo(String &inputPath, String &outputPath, int width, int height) {
     cv::VideoCapture cap(inputPath);
 
-    if(!cap.isOpened())
-    {
+    if (!cap.isOpened()) {
         std::cout << "Error: Failed to open video" << std::endl;
     }
 
     cv::VideoWriter video(outputPath,
-                        cap.get(cv::CAP_PROP_FOURCC),
-                        cap.get(cv::CAP_PROP_FPS),
-                        cv::Size(width, height));
+                          cap.get(cv::CAP_PROP_FOURCC),
+                          cap.get(cv::CAP_PROP_FPS),
+                          cv::Size(width, height));
 
-    while(true)
-    {
+    while (true) {
         cv::Mat frame;
         cap >> frame;
-        if(frame.empty())
+        if (frame.empty())
             break;
 
         cv::Mat resizedImage;
@@ -289,12 +268,10 @@ void Gimpsep::resizeVideo(String &inputPath, String &outputPath, int width, int 
     std::cout << "Resizing completed!" << std::endl;
 }
 
-void Gimpsep::resizeVideo(String &inputPath, String &outputPath, double factor)
-{
+void Gimpsep::resizeVideo(String &inputPath, String &outputPath, double factor) {
     cv::VideoCapture cap(inputPath);
 
-    if(!cap.isOpened())
-    {
+    if (!cap.isOpened()) {
         std::cout << "Error: Failed to open video" << std::endl;
     }
 
@@ -302,15 +279,14 @@ void Gimpsep::resizeVideo(String &inputPath, String &outputPath, double factor)
     int height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT) * factor);
 
     cv::VideoWriter video(outputPath,
-                        cap.get(cv::CAP_PROP_FOURCC),
-                        cap.get(cv::CAP_PROP_FPS),
-                        cv::Size(width, height));
+                          cap.get(cv::CAP_PROP_FOURCC),
+                          cap.get(cv::CAP_PROP_FPS),
+                          cv::Size(width, height));
 
-    while(true)
-    {
+    while (true) {
         cv::Mat frame;
         cap >> frame;
-        if(frame.empty())
+        if (frame.empty())
             break;
 
         cv::Mat resizedImage;
