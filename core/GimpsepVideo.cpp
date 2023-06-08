@@ -3,6 +3,10 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/stitching.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+
+//const String CASCADE_MODEL = "/../../assets/models/haarcascade_frontalface.xml";
 
 typedef std::string String;
 
@@ -186,4 +190,57 @@ void GimpsepVideo::resize(String &inputPath, String &outputPath, double factor) 
     video.release();
 
     std::cout << "Resizing completed!" << std::endl;
+}
+
+void GimpsepVideo::detectAndDraw(cv::CascadeClassifier &cascade, cv::Mat &img) {
+    std::vector<cv::Rect> facesCoordinates;
+    int frame = 4;
+    cv::Scalar color = cv::Scalar(255, 0, 0);
+
+    // turn to grayscale
+    cv::Mat gray;
+    cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+
+    // Detect faces of different sizes using cascade classifier
+    cascade.detectMultiScale(gray, facesCoordinates);
+
+    // draw rectangle on coordinates
+    for (auto &face: facesCoordinates) {
+        cv::rectangle(img, face, color, frame, 1, 0);
+    }
+}
+
+void GimpsepVideo::faceDetection(String &inputPath, String &outputPath, String cascadeModel) {
+    cv::CascadeClassifier cascade;
+
+    if (!cascade.load(cascadeModel)) {
+        std::cout << "Error loading face detection cascade model!" << std::endl;
+    }
+
+    std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath);
+    cv::VideoCapture cap = videoCW.first;
+    cv::VideoWriter video = videoCW.second;
+
+    if (cap.isOpened()) {
+        std::cout << "Starting face detection.." << std::endl;
+
+        while (true) {
+            cv::Mat frame;
+            cap >> frame;
+            if (frame.empty())
+                break;
+
+            GimpsepVideo::detectAndDraw(cascade, frame);
+            video.write(frame);
+        }
+
+        cap.release();
+        video.release();
+        videoCW.first.release();
+        videoCW.second.release();
+
+        std::cout << "Face detection video saved as " << outputPath << std::endl;
+    } else {
+        std::cout << "Video could not be opened!" << std::endl;
+    }
 }

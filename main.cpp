@@ -9,6 +9,7 @@
 typedef std::string String;
 
 const String WELCOME_TEXT_FILE_PATH = "../assets/welcome.txt";
+const String CASCADE_MODEL = "../assets/models/haarcascade_frontalface.xml";
 
 void displayLogo();
 
@@ -156,6 +157,19 @@ int main() {
             }
 
             Gimpsep::stitch(&inputPaths, outputPath);
+        } else if (option == "--detect" || option == "--detect --video") {
+            String inputPath, outputPath;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+
+            if (option == "--detect") {
+                GimpsepVideo::faceDetection(inputPath, outputPath, CASCADE_MODEL);
+            } else {
+                GimpsepVideo::faceDetection(inputPath, outputPath, CASCADE_MODEL);
+            }
         } else {
             std::cout << "Invalid option! Enter '--help' to see the available options." << std::endl;
         }

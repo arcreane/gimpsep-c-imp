@@ -25,6 +25,10 @@ public:
 
     static void cannyEdgeDetection(String &inputPath, String &outputPath, double threshold1, double threshold2,
                                    int apertureSize);
+
+    static void faceDetection(String &inputPath, String &outputPath, String cascadeModel);
+
+    static void detectAndDraw(cv::CascadeClassifier &cls, cv::Mat &img);
 };
 
 #endif
