@@ -1,8 +1,11 @@
 #include "Gimpsep.h"
+#include "GimpsepVideo.h"
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/stitching.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 typedef std::string String;
 
@@ -104,4 +107,17 @@ void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath) {
     cv::imwrite(outputPath, pano);
 
     std::cout << "Panorama created!" << std::endl;
+}
+
+void Gimpsep::faceDetection(String &inputPath, String &outputPath, String cascadeModel){
+    cv::CascadeClassifier cascade;
+    if (!cascade.load(cascadeModel)) {
+        std::cout << "Error loading face detection cascade model!" << std::endl;
+    }
+
+    cv::Mat image = Gimpsep::readImage(inputPath);
+
+    GimpsepVideo::detectAndDraw(cascade, image);
+    cv::imwrite(outputPath, image);
+    std::cout << "Face detection for picture completed!" << std::endl;
 }

@@ -166,7 +166,7 @@ int main() {
             std::getline(std::cin, outputPath);
 
             if (option == "--detect") {
-                GimpsepVideo::faceDetection(inputPath, outputPath, CASCADE_MODEL);
+                Gimpsep::faceDetection(inputPath, outputPath, CASCADE_MODEL);
             } else {
                 GimpsepVideo::faceDetection(inputPath, outputPath, CASCADE_MODEL);
             }

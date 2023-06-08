@@ -26,6 +26,8 @@ public:
 
     static void
     cannyEdgeDetection(String &inputPath, String &outputPath, double threshold1, double threshold2, int apertureSize);
+
+    static void faceDetection(String &inputPath, String &outputPath, String cascadeModel);
 };
 
 #endif
