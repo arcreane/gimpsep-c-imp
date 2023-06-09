@@ -30,8 +30,37 @@ GimpsepVideo::readVideo(const String &filename, const String &outputPath, bool i
     return std::make_pair(cap, video);
 }
 
+void GimpsepVideo::showVideos(const String &inputVideo, const String &outputVideo) {
+    cv::VideoCapture input(inputVideo);
+    cv::VideoCapture output(outputVideo);
 
-void GimpsepVideo::dilate(String &inputPath, String &outputPath, int erosionSize) {
+    const String inputWindow = "Input Video";
+    const String outputWindow = "Output Video";
+
+    cv::namedWindow(inputWindow);
+    cv::namedWindow(outputWindow);
+
+    while (true) {
+        cv::Mat inputFrame;
+        cv::Mat outputFrame;
+
+        input >> inputFrame;
+        output >> outputFrame;
+        if (inputFrame.empty() && outputFrame.empty())
+            break;
+        
+        cv::imshow(inputWindow, inputFrame);
+        cv::imshow(outputWindow, outputFrame);
+    }
+
+    cv::waitKey(0);
+    cv::destroyAllWindows();
+    input.release();
+    output.release();
+}
+
+
+void GimpsepVideo::dilate(String &inputPath, String &outputPath, int erosionSize, char verbose) {
     std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
@@ -56,9 +85,13 @@ void GimpsepVideo::dilate(String &inputPath, String &outputPath, int erosionSize
     videoCW.second.release();
 
     std::cout << "Dilated image saved as" << outputPath << std::endl;
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
+    }
 }
 
-void GimpsepVideo::erode(String &inputPath, String &outputPath, int erosionSize) {
+void GimpsepVideo::erode(String &inputPath, String &outputPath, int erosionSize, char verbose) {
     std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
@@ -83,9 +116,13 @@ void GimpsepVideo::erode(String &inputPath, String &outputPath, int erosionSize)
     videoCW.second.release();
 
     std::cout << "Erode image saved as" << outputPath << std::endl;
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
+    }
 }
 
-void GimpsepVideo::lightenDarken(String &inputPath, String &outputPath, double factor) {
+void GimpsepVideo::lightenDarken(String &inputPath, String &outputPath, double factor, char verbose) {
     std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
@@ -108,10 +145,14 @@ void GimpsepVideo::lightenDarken(String &inputPath, String &outputPath, double f
     videoCW.second.release();
 
     std::cout << "Brightness adjustment completed!" << std::endl;
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
+    }
 }
 
 void GimpsepVideo::cannyEdgeDetection(String &inputPath, String &outputPath, double threshold1, double threshold2,
-                                      int apertureSize) {
+                                      int apertureSize, char verbose) {
     std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath, false);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
@@ -134,9 +175,13 @@ void GimpsepVideo::cannyEdgeDetection(String &inputPath, String &outputPath, dou
     videoCW.second.release();
 
     std::cout << "Canny edge detection completed!" << std::endl;
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
+    }
 }
 
-void GimpsepVideo::resize(String &inputPath, String &outputPath, int width, int height) {
+void GimpsepVideo::resize(String &inputPath, String &outputPath, int width, int height, char verbose) {
     cv::VideoCapture cap(inputPath);
 
     if (!cap.isOpened()) {
@@ -161,9 +206,13 @@ void GimpsepVideo::resize(String &inputPath, String &outputPath, int width, int 
     video.release();
 
     std::cout << "Resizing completed!" << std::endl;
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
+    }
 }
 
-void GimpsepVideo::resize(String &inputPath, String &outputPath, double factor) {
+void GimpsepVideo::resize(String &inputPath, String &outputPath, double factor, char verbose) {
     cv::VideoCapture cap(inputPath);
 
     if (!cap.isOpened()) {
@@ -190,6 +239,10 @@ void GimpsepVideo::resize(String &inputPath, String &outputPath, double factor) 
     video.release();
 
     std::cout << "Resizing completed!" << std::endl;
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
+    }
 }
 
 void GimpsepVideo::detectAndDraw(cv::CascadeClassifier &cascade, cv::Mat &img) {
@@ -210,7 +263,7 @@ void GimpsepVideo::detectAndDraw(cv::CascadeClassifier &cascade, cv::Mat &img) {
     }
 }
 
-void GimpsepVideo::faceDetection(String &inputPath, String &outputPath, String cascadeModel) {
+void GimpsepVideo::faceDetection(String &inputPath, String &outputPath, String cascadeModel, char verbose) {
     cv::CascadeClassifier cascade;
 
     if (!cascade.load(cascadeModel)) {
@@ -242,5 +295,9 @@ void GimpsepVideo::faceDetection(String &inputPath, String &outputPath, String c
         std::cout << "Face detection video saved as " << outputPath << std::endl;
     } else {
         std::cout << "Video could not be opened!" << std::endl;
+    }
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
     }
 }
