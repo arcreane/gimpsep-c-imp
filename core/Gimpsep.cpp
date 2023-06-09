@@ -17,8 +17,15 @@ cv::Mat Gimpsep::readImage(const String &filename, int flags = cv::IMREAD_COLOR)
     return image;
 }
 
+void Gimpsep::showImages(cv::Mat inputImage, cv::Mat outputImage) {
+    cv::imshow("Input Image", inputImage);
+    cv::imshow("Output Image", outputImage);
+    cv::waitKey(0);
+    cv::destroyAllWindows();
+}
+
 void Gimpsep::cannyEdgeDetection(String &inputPath, String &outputPath, double threshold1, double threshold2,
-                                 int apertureSize) {
+                                 int apertureSize, char verbose) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat edges;
 
@@ -26,9 +33,13 @@ void Gimpsep::cannyEdgeDetection(String &inputPath, String &outputPath, double t
     cv::imwrite(outputPath, edges);
 
     std::cout << "Canny edge detection completed!" << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(image, edges);
+    }
 }
 
-void Gimpsep::dilate(String &inputPath, String &outputPath, int size) {
+void Gimpsep::dilate(String &inputPath, String &outputPath, int size, char verbose) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat dilatedImage;
     cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(2 * size + 1, 2 * size + 1),
@@ -36,10 +47,14 @@ void Gimpsep::dilate(String &inputPath, String &outputPath, int size) {
     cv::dilate(image, dilatedImage, element);
     cv::imwrite(outputPath, dilatedImage);
     std::cout << "Dilated image saved as" << outputPath << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(image, dilatedImage);
+    }
 }
 
 
-void Gimpsep::erode(String &inputPath, String &outputPath, int size) {
+void Gimpsep::erode(String &inputPath, String &outputPath, int size, char verbose) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat erodedImage;
 
@@ -48,9 +63,13 @@ void Gimpsep::erode(String &inputPath, String &outputPath, int size) {
     cv::erode(image, erodedImage, element);
     cv::imwrite(outputPath, erodedImage);
     std::cout << "Erode image saved as" << outputPath << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(image, erodedImage);
+    }
 }
 
-void Gimpsep::resizeImage(String &inputPath, String &outputPath, int width, int height) {
+void Gimpsep::resizeImage(String &inputPath, String &outputPath, int width, int height, char verbose) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat resizedImage;
 
@@ -58,9 +77,13 @@ void Gimpsep::resizeImage(String &inputPath, String &outputPath, int width, int 
     cv::imwrite(outputPath, resizedImage);
 
     std::cout << "Resized image saved as" << outputPath << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(image, resizedImage);
+    }
 }
 
-void Gimpsep::resizeImage(String &inputPath, String &outputPath, double factor) {
+void Gimpsep::resizeImage(String &inputPath, String &outputPath, double factor, char verbose) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat resizedImage;
 
@@ -68,9 +91,13 @@ void Gimpsep::resizeImage(String &inputPath, String &outputPath, double factor) 
     cv::imwrite(outputPath, resizedImage);
 
     std::cout << "Resized image saved as" << outputPath << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(image, resizedImage);
+    }
 }
 
-void Gimpsep::lightenDarken(String &inputPath, String &outputPath, double factor) {
+void Gimpsep::lightenDarken(String &inputPath, String &outputPath, double factor, char verbose) {
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat brightness;
 
@@ -78,9 +105,13 @@ void Gimpsep::lightenDarken(String &inputPath, String &outputPath, double factor
     cv::imwrite(outputPath, brightness);
 
     std::cout << "Brightness adjustment completed!" << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(image, brightness);
+    }
 }
 
-void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath) {
+void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath, char verbose) {
     std::vector<cv::Mat> image_array;
     for (int i = 0; i < inputPaths->size(); i++) {
         image_array.emplace_back(Gimpsep::readImage((*inputPaths)[i]));
@@ -107,17 +138,32 @@ void Gimpsep::stitch(std::vector<String> *inputPaths, String &outputPath) {
     cv::imwrite(outputPath, pano);
 
     std::cout << "Panorama created!" << std::endl;
+
+    if(verbose == 'y') {
+        for (int i = 0; i < image_array.size(); i++) {
+            String windowName = "Input Image " + std::to_string(i+1);
+            cv::imshow(windowName, image_array[i]);
+        }
+        cv::imshow("Output Image", pano);
+        cv::waitKey(0);
+        cv::destroyAllWindows();
+    }
 }
 
-void Gimpsep::faceDetection(String &inputPath, String &outputPath, String cascadeModel){
+void Gimpsep::faceDetection(String &inputPath, String &outputPath, String cascadeModel, char verbose){
     cv::CascadeClassifier cascade;
     if (!cascade.load(cascadeModel)) {
         std::cout << "Error loading face detection cascade model!" << std::endl;
     }
 
     cv::Mat image = Gimpsep::readImage(inputPath);
+    cv::Mat faces = image.clone();
 
-    GimpsepVideo::detectAndDraw(cascade, image);
-    cv::imwrite(outputPath, image);
+    GimpsepVideo::detectAndDraw(cascade, faces);
+    cv::imwrite(outputPath, faces);
     std::cout << "Face detection for picture completed!" << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(image, faces);
+    }
 }
