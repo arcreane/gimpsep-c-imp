@@ -29,7 +29,10 @@ public:
 
     static void faceDetection(String &inputPath, String &outputPath, String cascadeModel, char verbose);
 
-    static void detectAndDraw(cv::CascadeClassifier &cls, cv::Mat &img);
+    static void detectAndDraw(cv::CascadeClassifier &cls, cv::Mat &img);        
+    
+    static void gaussianBlur(const std::string& inputPath, const std::string& outputPath,
+                             const cv::Size& kernelSize);
 };
 
 #endif
