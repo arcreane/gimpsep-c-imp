@@ -167,7 +167,7 @@ void Gimpsep::faceDetection(String &inputPath, String &outputPath, String cascad
         Gimpsep::showImages(image, faces);
     }
 }
-void Gimpsep::gaussianBlur(String& inputPath, String& outputPath, cv::Size kernelSize)
+void Gimpsep::gaussianBlur(String& inputPath, String& outputPath, cv::Size kernelSize,char verbose)
 {
     cv::Mat source = cv::imread(inputPath);
     if (source.empty()) {
@@ -180,5 +180,9 @@ void Gimpsep::gaussianBlur(String& inputPath, String& outputPath, cv::Size kerne
 
     cv::imwrite(outputPath, blurredImage);
     std::cout << "Gaussian blur applied to the image!" << std::endl;
+
+    if(verbose == 'y') {
+        Gimpsep::showImages(source, blurredImage);
+    }
 }
 
