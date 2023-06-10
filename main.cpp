@@ -195,7 +195,27 @@ int main() {
             } else {
                 GimpsepVideo::faceDetection(inputPath, outputPath, CASCADE_MODEL, verbose);
             }
-        } else {
+        } else if (option == "--gaussian" || option == "--gaussian --video") {
+            String inputPath, outputPath;
+            cv::Size kernelSize;
+
+            std::cout << "Enter input path: ";
+            std::getline(std::cin, inputPath);
+            std::cout << "Enter output path: ";
+            std::getline(std::cin, outputPath);
+            std::cout << "Enter kernel size (width height): ";
+            int kernelWidth, kernelHeight;
+            std::cin >> kernelWidth >> kernelHeight;
+            std::cin.ignore(); // Ignore remaining newline character
+
+            kernelSize = cv::Size(kernelWidth, kernelHeight);
+
+            if (option == "--gaussian") {
+                Gimpsep::gaussianBlur(inputPath, outputPath, kernelSize);
+            } else {
+                GimpsepVideo::gaussianBlur(inputPath, outputPath, kernelSize);
+            }
+        }else {
             std::cout << "Invalid option! Enter '--help' to see the available options." << std::endl;
         }
     }
