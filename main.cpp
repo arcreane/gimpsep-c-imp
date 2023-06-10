@@ -237,6 +237,7 @@ void help() {
     std::cout << "  --resize-by-factor [--video]: Resize image/video by factor" << std::endl;
     std::cout << "  --lighten-darken [--video]: Lighten or darken the image/video" << std::endl;
     std::cout << "  --canny [--video]: Perform Canny edge detection" << std::endl;
+    std::cout << "  --gaussian [--video]: Perform Gaussian blur on image/video[can use 5x5 as well as 3x3 kernel]" << std::endl;
     std::cout << "  --panorama: Create a panorama by stitching images" << std::endl;
     std::cout << "  --help: Show help information" << std::endl;
 }
