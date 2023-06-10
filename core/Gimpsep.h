@@ -30,7 +30,7 @@ public:
 
     static void faceDetection(String &inputPath, String &outputPath, String cascadeModel, char verbose);
     
-    static void gaussianBlur(String& inputPath, String& outputPath, cv::Size kernelSize);
+    static void gaussianBlur(String& inputPath, String& outputPath, cv::Size kernelSize, char verbose);
 
 };
 
