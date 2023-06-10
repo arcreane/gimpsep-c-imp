@@ -73,7 +73,7 @@ void Gimpsep::resizeImage(String &inputPath, String &outputPath, int width, int 
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat resizedImage;
 
-    cv::resize(image, resizedImage, cv::Size(width, height));
+    cv::resize(image, resizedImage, cv::Size(width, height),cv::INTER_LINEAR);
     cv::imwrite(outputPath, resizedImage);
 
     std::cout << "Resized image saved as" << outputPath << std::endl;
@@ -87,7 +87,7 @@ void Gimpsep::resizeImage(String &inputPath, String &outputPath, double factor, 
     cv::Mat image = Gimpsep::readImage(inputPath);
     cv::Mat resizedImage;
 
-    cv::resize(image, resizedImage, cv::Size(image.rows * factor, image.cols * factor));
+    cv::resize(image, resizedImage, cv::Size(image.rows * factor, image.cols * factor),cv::INTER_LINEAR);
     cv::imwrite(outputPath, resizedImage);
 
     std::cout << "Resized image saved as" << outputPath << std::endl;
