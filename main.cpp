@@ -107,7 +107,7 @@ int main() {
             std::cin >> verbose;
             std::cin.ignore(); // Ignore remaining newline character
 
-            if (option == "--resize") {
+            if (option == "--resize-by-factor") {
                 Gimpsep::resizeImage(inputPath, outputPath, factor, verbose);
             } else {
                 GimpsepVideo::resize(inputPath, outputPath, factor, verbose);
