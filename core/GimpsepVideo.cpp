@@ -182,13 +182,10 @@ void GimpsepVideo::cannyEdgeDetection(String &inputPath, String &outputPath, dou
 }
 
 void GimpsepVideo::resize(String &inputPath, String &outputPath, int width, int height, char verbose) {
-    cv::VideoCapture cap(inputPath);
+    std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath);
+    cv::VideoCapture cap = videoCW.first;
+    cv::VideoWriter video = videoCW.second;
 
-    if (!cap.isOpened()) {
-        std::cout << "Error: Failed to open video" << std::endl;
-    }
-
-    cv::VideoWriter video(outputPath, cap.get(cv::CAP_PROP_FOURCC), cap.get(cv::CAP_PROP_FPS), cv::Size(width, height));
 
     while (true) {
         cv::Mat frame;
@@ -198,12 +195,14 @@ void GimpsepVideo::resize(String &inputPath, String &outputPath, int width, int 
 
         cv::Mat resizedImage;
 
-        cv::resize(frame, resizedImage, cv::Size(width, height));
+        cv::resize(frame, resizedImage, cv::Size(width, height),cv::INTER_LINEAR);
         video.write(resizedImage);
     }
 
     cap.release();
     video.release();
+    videoCW.first.release();
+    videoCW.second.release();
 
     std::cout << "Resizing completed!" << std::endl;
 
@@ -213,16 +212,12 @@ void GimpsepVideo::resize(String &inputPath, String &outputPath, int width, int 
 }
 
 void GimpsepVideo::resize(String &inputPath, String &outputPath, double factor, char verbose) {
-    cv::VideoCapture cap(inputPath);
-
-    if (!cap.isOpened()) {
-        std::cout << "Error: Failed to open video" << std::endl;
-    }
+    std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath);
+    cv::VideoCapture cap = videoCW.first;
+    cv::VideoWriter video = videoCW.second;
 
     int width = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH) * factor);
     int height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT) * factor);
-
-    cv::VideoWriter video(outputPath, cap.get(cv::CAP_PROP_FOURCC), cap.get(cv::CAP_PROP_FPS), cv::Size(width, height));
 
     while (true) {
         cv::Mat frame;
@@ -232,12 +227,13 @@ void GimpsepVideo::resize(String &inputPath, String &outputPath, double factor, 
 
         cv::Mat resizedImage;
 
-        cv::resize(frame, resizedImage, cv::Size(width, height));
+        cv::resize(frame, resizedImage, cv::Size(width, height),cv::INTER_LINEAR);
         video.write(resizedImage);
     }
     cap.release();
     video.release();
-
+    videoCW.first.release();
+    videoCW.second.release();
     std::cout << "Resizing completed!" << std::endl;
 
     if(verbose == 'y') {
