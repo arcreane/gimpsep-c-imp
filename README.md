@@ -13,7 +13,7 @@ A project to develop a small GIMP-like image editor at ISEP summer semester 2023
 
 ### Work subdivision:
 * Jakub - Canny / Main.cpp
-* Rahul - Resize
+* Rahul - Resize/ Resize by factor/ Gaussian Blur[Image + Video]
 * Nizar - Dilatation / Erosion / Face detection
 * Witchaya - Lighten / Darken
 
