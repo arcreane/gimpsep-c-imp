@@ -197,6 +197,7 @@ int main() {
             }
         } else if (option == "--gaussian" || option == "--gaussian --video") {
             String inputPath, outputPath;
+            char verbose;
             cv::Size kernelSize;
 
             std::cout << "Enter input path: ";
@@ -206,14 +207,16 @@ int main() {
             std::cout << "Enter kernel size (width height): ";
             int kernelWidth, kernelHeight;
             std::cin >> kernelWidth >> kernelHeight;
+            std::cout << "Display before/after? (y/n): ";
+            std::cin >> verbose;
             std::cin.ignore(); // Ignore remaining newline character
 
             kernelSize = cv::Size(kernelWidth, kernelHeight);
 
             if (option == "--gaussian") {
-                Gimpsep::gaussianBlur(inputPath, outputPath, kernelSize);
+                Gimpsep::gaussianBlur(inputPath, outputPath, kernelSize,verbose);
             } else {
-                GimpsepVideo::gaussianBlur(inputPath, outputPath, kernelSize);
+                GimpsepVideo::gaussianBlur(inputPath, outputPath, kernelSize,verbose);
             }
         }else {
             std::cout << "Invalid option! Enter '--help' to see the available options." << std::endl;
