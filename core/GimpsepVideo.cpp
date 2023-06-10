@@ -259,7 +259,7 @@ void GimpsepVideo::detectAndDraw(cv::CascadeClassifier &cascade, cv::Mat &img) {
     }
 }
 
-void GimpsepVideo::gaussianBlur(const std::string& inputPath, const std::string& outputPath, const cv::Size& kernelSize) {
+void GimpsepVideo::gaussianBlur(const std::string& inputPath, const std::string& outputPath, const cv::Size& kernelSize,char verbose) {
     std::pair<cv::VideoCapture, cv::VideoWriter> videoCW = GimpsepVideo::readVideo(inputPath, outputPath);
     cv::VideoCapture cap = videoCW.first;
     cv::VideoWriter video = videoCW.second;
@@ -282,7 +282,12 @@ void GimpsepVideo::gaussianBlur(const std::string& inputPath, const std::string&
 
 
     std::cout << "Gaussian blur applied to video successfully. Output path: " << outputPath << std::endl;
+
+    if(verbose == 'y') {
+        GimpsepVideo::showVideos(inputPath, outputPath);
+    }
 }
+
 
 void GimpsepVideo::faceDetection(String &inputPath, String &outputPath, String cascadeModel, char verbose) {
     cv::CascadeClassifier cascade;
